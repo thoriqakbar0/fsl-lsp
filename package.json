@@ -27,7 +27,7 @@
     "@biomejs/biome": "2.5.14",
     "@hegeldev/hegel": "^0.4.6",
     "tree-sitter": "^0.25.1",
-    "tree-sitter-cli": "^0.25.10"
+    "tree-sitter-cli": "^0.27.0"
   },
   "tree-sitter": [
     {
