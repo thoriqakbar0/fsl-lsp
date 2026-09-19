@@ -1,0 +1,23 @@
+id = "fsl"
+name = "FSL"
+version = "0.1.0"
+schema_version = 1
+description = "Experimental FSL syntax and language-server support."
+repository = "https://github.com/thoriqakbar0/fsl-lsp"
+authors = ["Thoriq Akbar"]
+languages = ["languages/fsl"]
+
+[lib]
+kind = "Rust"
+version = "0.1.0"
+
+[grammars.fsl]
+repository = "https://github.com/thoriqakbar0/fsl-lsp"
+rev = "891f7b94df3f6aa644fab7c7f5ad4a520811b75a"
+
+[language_servers.fslc-lsp]
+name = "FSL Language Server"
+languages = ["FSL"]
+
+[language_servers.fslc-lsp.language_ids]
+FSL = "fsl"

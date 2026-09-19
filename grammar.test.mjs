@@ -31,24 +31,45 @@ const number = gs.text({ alphabet: "0123456789", minSize: 1, maxSize: 64 });
 // Tree-sitter reserves NUL as its input sentinel, so it is not valid source text.
 const stringContent = gs.text({
   maxSize: 32,
-  excludeCharacters: "\u0000\"\\\n\r",
+  excludeCharacters: '\u0000"\\\n\r',
 });
 const commentContent = gs.text({
   maxSize: 48,
   excludeCharacters: "\u0000\n\r",
 });
 const operator = gs.sampledFrom([
-  "=>", "~>", "||", "->", "==", "!=", "<=", ">=", "..",
-  "+", "-", "*", "/", "%", "<", ">", "=",
+  "=>",
+  "~>",
+  "||",
+  "->",
+  "==",
+  "!=",
+  "<=",
+  ">=",
+  "..",
+  "+",
+  "-",
+  "*",
+  "/",
+  "%",
+  "<",
+  ">",
+  "=",
 ]);
-const punctuation = gs.sampledFrom([
-  "{", "}", "(", ")", "[", "]", ",", ":", ";", ".",
-]);
+const punctuation = gs.sampledFrom(["{", "}", "(", ")", "[", "]", ",", ":", ";", "."]);
 
 const token = gs.composite((tc) => {
-  const kind = tc.draw(gs.sampledFrom([
-    "identifier", "number", "string", "annotation", "operator", "punctuation", "comment",
-  ]));
+  const kind = tc.draw(
+    gs.sampledFrom([
+      "identifier",
+      "number",
+      "string",
+      "annotation",
+      "operator",
+      "punctuation",
+      "comment",
+    ]),
+  );
 
   switch (kind) {
     case "identifier":
@@ -70,9 +91,7 @@ const token = gs.composite((tc) => {
   }
 });
 
-const separator = gs.sampledFrom([
-  " ", "\t", "\n", "\r\n", "\uFEFF", "\u2060", "\u200B",
-]);
+const separator = gs.sampledFrom([" ", "\t", "\n", "\r\n", "\uFEFF", "\u2060", "\u200B"]);
 
 function renderTokens(tc, tokens) {
   let source = "";
@@ -92,13 +111,13 @@ const validProgram = gs.composite((tc) => {
 
 const invalidProgram = gs.composite((tc) => {
   const tokens = tc.draw(gs.arrays(token, { maxSize: 40 }));
-  const insertionIndex = tc.draw(gs.integers({
-    minValue: 0,
-    maxValue: tokens.length,
-  }));
-  const invalidCharacter = tc.draw(gs.sampledFrom([
-    "#", "?", "'", "&", "!", "`", "\\",
-  ]));
+  const insertionIndex = tc.draw(
+    gs.integers({
+      minValue: 0,
+      maxValue: tokens.length,
+    }),
+  );
+  const invalidCharacter = tc.draw(gs.sampledFrom(["#", "?", "'", "&", "!", "`", "\\"]));
   const prefix = renderTokens(tc, tokens.slice(0, insertionIndex));
   const suffix = renderTokens(tc, tokens.slice(insertionIndex));
   return `${prefix}\n${invalidCharacter}\n${suffix}`;

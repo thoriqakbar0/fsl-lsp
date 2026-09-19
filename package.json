@@ -3,10 +3,20 @@
   "version": "0.1.0",
   "description": "Tree-sitter grammar for FSL editor and language-server integrations.",
   "private": true,
+  "license": "Apache-2.0",
+  "author": "Thoriq Akbar",
   "main": "bindings/node",
   "repository": "https://github.com/thoriqakbar0/fsl-lsp",
+  "homepage": "https://github.com/thoriqakbar0/fsl-lsp#readme",
+  "bugs": "https://github.com/thoriqakbar0/fsl-lsp/issues",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "tree-sitter generate && npm rebuild",
+    "check": "npm run lint && npm run build",
+    "format": "biome format --write biome.json grammar.js grammar.test.mjs bindings/node/index.js package.json tree-sitter.json",
+    "lint": "biome check biome.json grammar.js grammar.test.mjs bindings/node/index.js package.json tree-sitter.json",
     "test": "node --test grammar.test.mjs"
   },
   "dependencies": {
@@ -14,6 +24,7 @@
     "node-gyp-build": "^4.8.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.14",
     "@hegeldev/hegel": "^0.4.6",
     "tree-sitter": "^0.25.1",
     "tree-sitter-cli": "^0.25.10"

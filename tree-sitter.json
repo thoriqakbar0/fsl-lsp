@@ -5,9 +5,7 @@
       "camelcase": "FSL",
       "scope": "source.fsl",
       "path": ".",
-      "file-types": [
-        "fsl"
-      ]
+      "file-types": ["fsl"]
     }
   ],
   "metadata": {
