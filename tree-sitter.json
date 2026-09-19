@@ -1,0 +1,28 @@
+{
+  "grammars": [
+    {
+      "name": "fsl",
+      "camelcase": "FSL",
+      "scope": "source.fsl",
+      "path": ".",
+      "file-types": [
+        "fsl"
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "description": "Tree-sitter grammar for FSL editor and language-server integrations.",
+    "authors": [
+      {
+        "name": "Thoriq Akbar"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/thoriqakbar0/fsl-lsp"
+    }
+  },
+  "bindings": {
+    "node": true
+  }
+}

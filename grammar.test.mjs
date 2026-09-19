@@ -1,23 +1,17 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
-import { after, test } from "node:test";
-import { fileURLToPath } from "node:url";
+import { test } from "node:test";
 
 import * as hegel from "@hegeldev/hegel";
 import * as gs from "@hegeldev/hegel/generators";
+import Parser from "tree-sitter";
 
-const ROOT = dirname(fileURLToPath(import.meta.url));
-const TREE_SITTER = join(ROOT, "node_modules", ".bin", "tree-sitter");
-const TEMP_DIRECTORY = mkdtempSync(join(tmpdir(), "tree-sitter-fsl-pbt-"));
+import Fsl from "./bindings/node/index.js";
+
 const TEST_CASES = readTestCases();
 const SETTINGS = { seed: 1709, testCases: TEST_CASES };
+const parser = new Parser();
 
-let nextFileId = 0;
-
-after(() => rmSync(TEMP_DIRECTORY, { recursive: true }));
+parser.setLanguage(Fsl);
 
 function readTestCases() {
   const value = Number.parseInt(process.env.HEGEL_CASES ?? "100", 10);
@@ -28,34 +22,8 @@ function readTestCases() {
 }
 
 function parseSource(source) {
-  const sourcePath = join(TEMP_DIRECTORY, `case-${nextFileId++}.fsl`);
-  writeFileSync(sourcePath, source, "utf8");
-
-  const result = spawnSync(
-    TREE_SITTER,
-    ["parse", "--json", "--no-ranges", "--timeout", "1000000", sourcePath],
-    {
-      cwd: ROOT,
-      encoding: "utf8",
-      maxBuffer: 1024 * 1024,
-      timeout: 2_000,
-    },
-  );
-
-  rmSync(sourcePath);
-  if (result.error) {
-    throw result.error;
-  }
-
-  const reportStart = result.stdout.lastIndexOf('{\n  "parse_summaries"');
-  assert.notEqual(
-    reportStart,
-    -1,
-    `tree-sitter did not return a JSON report:\n${result.stdout}\n${result.stderr}`,
-  );
-  const report = JSON.parse(result.stdout.slice(reportStart));
-  assert.equal(report.parse_summaries.length, 1);
-  return report.parse_summaries[0].successful;
+  const tree = parser.parse(source);
+  return !tree.rootNode.hasError;
 }
 
 const identifier = gs.fromRegex("[A-Za-z_][A-Za-z0-9_-]{0,31}");
@@ -106,8 +74,7 @@ const separator = gs.sampledFrom([
   " ", "\t", "\n", "\r\n", "\uFEFF", "\u2060", "\u200B",
 ]);
 
-const validProgram = gs.composite((tc) => {
-  const tokens = tc.draw(gs.arrays(token, { maxSize: 40 }));
+function renderTokens(tc, tokens) {
   let source = "";
 
   for (const current of tokens) {
@@ -116,14 +83,24 @@ const validProgram = gs.composite((tc) => {
   }
 
   return source;
+}
+
+const validProgram = gs.composite((tc) => {
+  const tokens = tc.draw(gs.arrays(token, { maxSize: 40 }));
+  return renderTokens(tc, tokens);
 });
 
 const invalidProgram = gs.composite((tc) => {
-  const prefix = tc.draw(validProgram);
-  const suffix = tc.draw(validProgram);
+  const tokens = tc.draw(gs.arrays(token, { maxSize: 40 }));
+  const insertionIndex = tc.draw(gs.integers({
+    minValue: 0,
+    maxValue: tokens.length,
+  }));
   const invalidCharacter = tc.draw(gs.sampledFrom([
     "#", "?", "'", "&", "!", "`", "\\",
   ]));
+  const prefix = renderTokens(tc, tokens.slice(0, insertionIndex));
+  const suffix = renderTokens(tc, tokens.slice(insertionIndex));
   return `${prefix}\n${invalidCharacter}\n${suffix}`;
 });
 

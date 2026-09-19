@@ -2,7 +2,6 @@ module.exports = grammar({
   name: "fsl",
 
   extras: ($) => [/[\s\uFEFF\u2060\u200B]/, $.comment],
-  word: ($) => $.identifier,
 
   rules: {
     source_file: ($) => repeat($._token),

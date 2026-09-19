@@ -6,7 +6,7 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
-#define LANGUAGE_VERSION 14
+#define LANGUAGE_VERSION 15
 #define STATE_COUNT 8
 #define LARGE_STATE_COUNT 6
 #define SYMBOL_COUNT 22
@@ -20,11 +20,11 @@
 #define SUPERTYPE_COUNT 0
 
 enum ts_symbol_identifiers {
-  sym_identifier = 1,
-  sym_comment = 2,
-  anon_sym_AT = 3,
-  sym_string = 4,
-  sym_number = 5,
+  sym_comment = 1,
+  anon_sym_AT = 2,
+  sym_string = 3,
+  sym_number = 4,
+  sym_identifier = 5,
   sym_operator = 6,
   anon_sym_LBRACE = 7,
   anon_sym_RBRACE = 8,
@@ -45,11 +45,11 @@ enum ts_symbol_identifiers {
 
 static const char * const ts_symbol_names[] = {
   [ts_builtin_sym_end] = "end",
-  [sym_identifier] = "identifier",
   [sym_comment] = "comment",
   [anon_sym_AT] = "@",
   [sym_string] = "string",
   [sym_number] = "number",
+  [sym_identifier] = "identifier",
   [sym_operator] = "operator",
   [anon_sym_LBRACE] = "{",
   [anon_sym_RBRACE] = "}",
@@ -70,11 +70,11 @@ static const char * const ts_symbol_names[] = {
 
 static const TSSymbol ts_symbol_map[] = {
   [ts_builtin_sym_end] = ts_builtin_sym_end,
-  [sym_identifier] = sym_identifier,
   [sym_comment] = sym_comment,
   [anon_sym_AT] = anon_sym_AT,
   [sym_string] = sym_string,
   [sym_number] = sym_number,
+  [sym_identifier] = sym_identifier,
   [sym_operator] = sym_operator,
   [anon_sym_LBRACE] = anon_sym_LBRACE,
   [anon_sym_RBRACE] = anon_sym_RBRACE,
@@ -98,10 +98,6 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .visible = false,
     .named = true,
   },
-  [sym_identifier] = {
-    .visible = true,
-    .named = true,
-  },
   [sym_comment] = {
     .visible = true,
     .named = true,
@@ -115,6 +111,10 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .named = true,
   },
   [sym_number] = {
+    .visible = true,
+    .named = true,
+  },
+  [sym_identifier] = {
     .visible = true,
     .named = true,
   },
@@ -345,19 +345,7 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
   }
 }
 
-static bool ts_lex_keywords(TSLexer *lexer, TSStateId state) {
-  START_LEXER();
-  eof = lexer->eof(lexer);
-  switch (state) {
-    case 0:
-      ACCEPT_TOKEN(ts_builtin_sym_end);
-      END_STATE();
-    default:
-      return false;
-  }
-}
-
-static const TSLexMode ts_lex_modes[STATE_COUNT] = {
+static const TSLexerMode ts_lex_modes[STATE_COUNT] = {
   [0] = {.lex_state = 0},
   [1] = {.lex_state = 0},
   [2] = {.lex_state = 0},
@@ -371,11 +359,11 @@ static const TSLexMode ts_lex_modes[STATE_COUNT] = {
 static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
   [STATE(0)] = {
     [ts_builtin_sym_end] = ACTIONS(1),
-    [sym_identifier] = ACTIONS(1),
     [sym_comment] = ACTIONS(3),
     [anon_sym_AT] = ACTIONS(1),
     [sym_string] = ACTIONS(1),
     [sym_number] = ACTIONS(1),
+    [sym_identifier] = ACTIONS(1),
     [sym_operator] = ACTIONS(1),
     [anon_sym_LBRACE] = ACTIONS(1),
     [anon_sym_RBRACE] = ACTIONS(1),
@@ -395,11 +383,11 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_punctuation] = STATE(2),
     [aux_sym_source_file_repeat1] = STATE(2),
     [ts_builtin_sym_end] = ACTIONS(5),
-    [sym_identifier] = ACTIONS(7),
     [sym_comment] = ACTIONS(3),
-    [anon_sym_AT] = ACTIONS(9),
-    [sym_string] = ACTIONS(7),
-    [sym_number] = ACTIONS(7),
+    [anon_sym_AT] = ACTIONS(7),
+    [sym_string] = ACTIONS(9),
+    [sym_number] = ACTIONS(9),
+    [sym_identifier] = ACTIONS(9),
     [sym_operator] = ACTIONS(11),
     [anon_sym_LBRACE] = ACTIONS(13),
     [anon_sym_RBRACE] = ACTIONS(13),
@@ -418,11 +406,11 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_punctuation] = STATE(3),
     [aux_sym_source_file_repeat1] = STATE(3),
     [ts_builtin_sym_end] = ACTIONS(17),
-    [sym_identifier] = ACTIONS(19),
     [sym_comment] = ACTIONS(3),
-    [anon_sym_AT] = ACTIONS(9),
+    [anon_sym_AT] = ACTIONS(7),
     [sym_string] = ACTIONS(19),
     [sym_number] = ACTIONS(19),
+    [sym_identifier] = ACTIONS(19),
     [sym_operator] = ACTIONS(21),
     [anon_sym_LBRACE] = ACTIONS(13),
     [anon_sym_RBRACE] = ACTIONS(13),
@@ -441,11 +429,11 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [sym_punctuation] = STATE(3),
     [aux_sym_source_file_repeat1] = STATE(3),
     [ts_builtin_sym_end] = ACTIONS(23),
-    [sym_identifier] = ACTIONS(25),
     [sym_comment] = ACTIONS(3),
-    [anon_sym_AT] = ACTIONS(28),
-    [sym_string] = ACTIONS(25),
-    [sym_number] = ACTIONS(25),
+    [anon_sym_AT] = ACTIONS(25),
+    [sym_string] = ACTIONS(28),
+    [sym_number] = ACTIONS(28),
+    [sym_identifier] = ACTIONS(28),
     [sym_operator] = ACTIONS(31),
     [anon_sym_LBRACE] = ACTIONS(34),
     [anon_sym_RBRACE] = ACTIONS(34),
@@ -460,11 +448,11 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
   },
   [STATE(4)] = {
     [ts_builtin_sym_end] = ACTIONS(40),
-    [sym_identifier] = ACTIONS(40),
     [sym_comment] = ACTIONS(3),
     [anon_sym_AT] = ACTIONS(40),
     [sym_string] = ACTIONS(40),
     [sym_number] = ACTIONS(40),
+    [sym_identifier] = ACTIONS(40),
     [sym_operator] = ACTIONS(42),
     [anon_sym_LBRACE] = ACTIONS(40),
     [anon_sym_RBRACE] = ACTIONS(40),
@@ -479,11 +467,11 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
   },
   [STATE(5)] = {
     [ts_builtin_sym_end] = ACTIONS(44),
-    [sym_identifier] = ACTIONS(44),
     [sym_comment] = ACTIONS(3),
     [anon_sym_AT] = ACTIONS(44),
     [sym_string] = ACTIONS(44),
     [sym_number] = ACTIONS(44),
+    [sym_identifier] = ACTIONS(44),
     [sym_operator] = ACTIONS(46),
     [anon_sym_LBRACE] = ACTIONS(44),
     [anon_sym_RBRACE] = ACTIONS(44),
@@ -521,8 +509,8 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [1] = {.entry = {.count = 1, .reusable = false}}, RECOVER(),
   [3] = {.entry = {.count = 1, .reusable = true}}, SHIFT_EXTRA(),
   [5] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_source_file, 0, 0, 0),
-  [7] = {.entry = {.count = 1, .reusable = true}}, SHIFT(2),
-  [9] = {.entry = {.count = 1, .reusable = true}}, SHIFT(6),
+  [7] = {.entry = {.count = 1, .reusable = true}}, SHIFT(6),
+  [9] = {.entry = {.count = 1, .reusable = true}}, SHIFT(2),
   [11] = {.entry = {.count = 1, .reusable = false}}, SHIFT(2),
   [13] = {.entry = {.count = 1, .reusable = true}}, SHIFT(4),
   [15] = {.entry = {.count = 1, .reusable = false}}, SHIFT(4),
@@ -530,8 +518,8 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [19] = {.entry = {.count = 1, .reusable = true}}, SHIFT(3),
   [21] = {.entry = {.count = 1, .reusable = false}}, SHIFT(3),
   [23] = {.entry = {.count = 1, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0),
-  [25] = {.entry = {.count = 2, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0), SHIFT_REPEAT(3),
-  [28] = {.entry = {.count = 2, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0), SHIFT_REPEAT(6),
+  [25] = {.entry = {.count = 2, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0), SHIFT_REPEAT(6),
+  [28] = {.entry = {.count = 2, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0), SHIFT_REPEAT(3),
   [31] = {.entry = {.count = 2, .reusable = false}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0), SHIFT_REPEAT(3),
   [34] = {.entry = {.count = 2, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0), SHIFT_REPEAT(4),
   [37] = {.entry = {.count = 2, .reusable = false}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0), SHIFT_REPEAT(4),
@@ -564,6 +552,7 @@ TS_PUBLIC const TSLanguage *tree_sitter_fsl(void) {
     .state_count = STATE_COUNT,
     .large_state_count = LARGE_STATE_COUNT,
     .production_id_count = PRODUCTION_ID_COUNT,
+    .supertype_count = SUPERTYPE_COUNT,
     .field_count = FIELD_COUNT,
     .max_alias_sequence_length = MAX_ALIAS_SEQUENCE_LENGTH,
     .parse_table = &ts_parse_table[0][0],
@@ -577,9 +566,14 @@ TS_PUBLIC const TSLanguage *tree_sitter_fsl(void) {
     .alias_sequences = &ts_alias_sequences[0][0],
     .lex_modes = (const void*)ts_lex_modes,
     .lex_fn = ts_lex,
-    .keyword_lex_fn = ts_lex_keywords,
-    .keyword_capture_token = sym_identifier,
     .primary_state_ids = ts_primary_state_ids,
+    .name = "fsl",
+    .max_reserved_word_set_size = 0,
+    .metadata = {
+      .major_version = 0,
+      .minor_version = 1,
+      .patch_version = 0,
+    },
   };
   return &language;
 }

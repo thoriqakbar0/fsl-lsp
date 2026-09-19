@@ -1,9 +1,12 @@
 {
-  "name": "tree-sitter-fsl-local",
+  "name": "tree-sitter-fsl",
   "version": "0.1.0",
+  "description": "Tree-sitter grammar for FSL editor and language-server integrations.",
   "private": true,
   "main": "bindings/node",
+  "repository": "https://github.com/thoriqakbar0/fsl-lsp",
   "scripts": {
+    "build": "tree-sitter generate && npm rebuild",
     "test": "node --test grammar.test.mjs"
   },
   "dependencies": {
@@ -12,6 +15,7 @@
   },
   "devDependencies": {
     "@hegeldev/hegel": "^0.4.6",
+    "tree-sitter": "^0.25.1",
     "tree-sitter-cli": "^0.25.10"
   },
   "tree-sitter": [
