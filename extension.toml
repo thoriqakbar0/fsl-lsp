@@ -13,7 +13,7 @@ version = "0.1.0"
 
 [grammars.fsl]
 repository = "https://github.com/thoriqakbar0/fsl-lsp"
-rev = "891f7b94df3f6aa644fab7c7f5ad4a520811b75a"
+rev = "aee288d89fbd56592113a80363f13b054e6e381c"
 
 [language_servers.fslc-lsp]
 name = "FSL Language Server"
