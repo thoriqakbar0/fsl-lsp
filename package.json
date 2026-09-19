@@ -3,17 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "main": "bindings/node",
+  "scripts": {
+    "test": "node --test grammar.test.mjs"
+  },
   "dependencies": {
     "node-addon-api": "^8.3.1",
     "node-gyp-build": "^4.8.4"
   },
   "devDependencies": {
+    "@hegeldev/hegel": "^0.4.6",
     "tree-sitter-cli": "^0.25.10"
   },
   "tree-sitter": [
     {
       "scope": "source.fsl",
-      "file-types": ["fsl"]
+      "file-types": [
+        "fsl"
+      ]
     }
   ]
 }
